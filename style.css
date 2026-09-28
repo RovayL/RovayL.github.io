@@ -9,7 +9,7 @@ a:hover { color: #91b6ff; text-decoration: underline; text-decoration-color: var
 a:focus-visible, button:focus-visible { outline: 2px solid var(--red); outline-offset: 5px; border-radius: 2px; }
 .page { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
 .masthead { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 0 22px; border-bottom: 1px solid var(--line); }
-.wordmark { color: var(--text); font: 700 23px/1 ui-monospace, monospace; letter-spacing: -1px; }
+.wordmark { position: relative; display: block; flex-shrink: 0; color: var(--text); font: 700 23px/1 ui-monospace, monospace; letter-spacing: -1px; }
 .wordmark img { display: block; width: 79px; height: 56px; object-fit: cover; border-radius: 3px; }
 .wordmark:hover img { box-shadow: 0 2px var(--red); }
 nav { display: flex; gap: 26px; font-size: 13px; }
@@ -58,3 +58,6 @@ footer { border-top: 1px solid var(--line); display: flex; justify-content: spac
 @media (max-width: 480px) { .intro { display: flex; flex-direction: column; gap: 22px; } .portrait { order: -1; margin: 0; } .portrait img { width: 100px; height: 108px; } .portrait::after { display: none; } h1 { font-size: 40px; } .eyebrow { font-size: 9px; letter-spacing: 1px; } .masthead { align-items: flex-start; } nav { max-width: 255px; gap: 7px 14px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .link-loader { transition: none; } }
 @media print { :root { color-scheme: light; } body { background: white; color: black; font-size: 11px; } body::before, body::after, nav, .link-loader, .skip-link { display: none; } .page { max-width: none; padding: 0; } a, .authors, .venue, .interests, .date { color: #333; } .intro { padding: 24px 0; } .entry { break-inside: avoid; } }
+
+/* Perspective-matched live display inside Tintin’s monitor. */
+#tintin-screen { position: absolute; inset: 0; width: 79px; height: 56px; pointer-events: none; }

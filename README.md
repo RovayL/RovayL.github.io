@@ -16,7 +16,7 @@ Open http://localhost:8000. Serve **this directory only**, not the private paren
 
 - `index.html`: biography and dated entries, newest first. Add a `<li class="entry">` to the relevant section.
 - `style.css`: colors, typography, layout, background visibility, and responsive styles.
-- `hilbert.js`: the red/blue Hilbert curve link transition; respects reduced motion, modified clicks, and same-page navigation.
+- `hilbert.js`: the live perspective-matched Hilbert curve in Tintin’s monitor and red/blue link transition; respects reduced motion, modified clicks, and same-page navigation.
 - `papers/`: public copies of papers and presentations, with stable descriptive filenames.
 - `assets/`: public portrait, cropped Tintin masthead image, binary background, résumé, and favicon.
 

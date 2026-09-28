@@ -19,6 +19,47 @@
     return { x: (x + .5) * size / grid, y: (grid - y - .5) * size / grid };
   });
   const red = [255, 40, 40], blue = [0, 0, 255];
+
+  // Miniature display: coordinates match the monitor in the cropped masthead.
+  const miniCanvas = document.getElementById('tintin-screen');
+  const miniCtx = miniCanvas?.getContext('2d');
+  let miniFrame = 0;
+  const screen = [{x:80.4,y:13.6},{x:138.4,y:8.8},{x:138.4,y:54.4},{x:80.8,y:58.8}];
+  function screenPoint(u, v) {
+    const top = {x:screen[0].x*(1-u)+screen[1].x*u,y:screen[0].y*(1-u)+screen[1].y*u};
+    const bottom = {x:screen[3].x*(1-u)+screen[2].x*u,y:screen[3].y*(1-u)+screen[2].y*u};
+    return {x:top.x*(1-v)+bottom.x*v,y:top.y*(1-v)+bottom.y*v};
+  }
+  // Sample every fourth vertex for a legible order-4 curve at this small size.
+  const miniPath = path.filter((_, i) => i % 4 === 0).map(p => screenPoint(.07 + .86*(Math.floor(p.x/(size/16))+.5)/16, .07 + .86*(Math.floor(p.y/(size/16))+.5)/16));
+  function drawMini(now) {
+    miniCtx.setTransform(2, 0, 0, 2, 0, 0);
+    miniCtx.clearRect(0, 0, 158, 112);
+    miniCtx.save();
+    miniCtx.beginPath(); miniCtx.moveTo(screen[0].x,screen[0].y);
+    screen.slice(1).forEach(p => miniCtx.lineTo(p.x,p.y));
+    miniCtx.closePath(); miniCtx.clip();
+    miniCtx.fillStyle = '#050609'; miniCtx.fillRect(75,5,70,60);
+    miniCtx.lineWidth = 2.5; miniCtx.lineCap = 'round'; miniCtx.lineJoin = 'round';
+    const offset = reducedMotion.matches ? 0 : now * .00035;
+    for (let i = 1; i < miniPath.length; i++) {
+      const t = (i / miniPath.length + offset) % 1;
+      const mix = (1 - Math.cos(t * Math.PI * 2)) / 2;
+      miniCtx.strokeStyle = `rgb(${blue.map((v,k) => Math.round(v*(1-mix)+red[k]*mix)).join(',')})`;
+      miniCtx.beginPath(); miniCtx.moveTo(miniPath[i-1].x,miniPath[i-1].y);
+      miniCtx.lineTo(miniPath[i].x,miniPath[i].y); miniCtx.stroke();
+    }
+    miniCtx.restore();
+    if (!reducedMotion.matches && !document.hidden) miniFrame = requestAnimationFrame(drawMini);
+  }
+  function restartMini() {
+    cancelAnimationFrame(miniFrame);
+    if (miniCtx) drawMini(performance.now());
+  }
+  document.addEventListener('visibilitychange', restartMini);
+  reducedMotion.addEventListener('change', restartMini);
+  restartMini();
+
   let frame = 0, started = 0, timer = 0;
   function draw(now) {
     ctx.clearRect(0, 0, size, size);
